@@ -4,7 +4,7 @@ should read only one value each time scanf is executed. A typical input sequence
 5 100 200 300 400 500
 where the 5 indicates that the subsequent five values are to be summed*/
 #include <stdio.h>
-#include <math.h>
+
 
 int main(void)
 {
