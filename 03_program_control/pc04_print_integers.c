@@ -2,7 +2,7 @@
 five integers per line. [Hint: Use the calculation x % 5. When the value of this is 0, print
 a newline character, otherwise print a tab character.]*/
 #include <stdio.h>
-#include <math.h>
+
 
 int main(void)
 {
