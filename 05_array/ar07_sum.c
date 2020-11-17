@@ -1,3 +1,4 @@
+//сумма_элементов_массива
 #include <stdio.h>
 #define SIZE 10
 
