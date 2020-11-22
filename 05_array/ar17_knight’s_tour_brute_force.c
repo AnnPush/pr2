@@ -75,13 +75,13 @@ int main(void)
 	
 	n = 0;//обнулить счетчик
 	
-	//puts(" ");
-	//printArray(board, SIZE);
+	puts(" ");
+	printArray(board, SIZE);
 	}
-	
-	for ( int j =0; j < SIZES; j++)
+	puts(" ");
+	for ( int j = 1; j <= SIZES; j++)
 	{
-	    printf("%4d", a[j]);//распечатать массив с числом обходов и их продолжительностью
+	    printf("%2d. %d\n", j, a[j]);//распечатать массив с числом обходов и их продолжительностью
 	}
 	puts(" ");
 }
