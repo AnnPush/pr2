@@ -1,12 +1,11 @@
 #include <stdio.h>
-#define SIZE 10
 
 void stringReverse(char a[], char size, int i);
 
 int main(void)
 {
-	char array[SIZE] = {'d', 'y', 'n', 'o', 'j', 'l', 'p', 'r', 'y', '\0'};
-	for(int i = 0; i < SIZE; ++i)
+	char array[] = {'d', 'y', 'n', 'o', 'j', 'l', 'p', 'r', 'y', '\0'};
+	for(int i = 0;  array[i] != '\0'; ++i)
 	{
 		printf("%5c", array[i]);
 	}
