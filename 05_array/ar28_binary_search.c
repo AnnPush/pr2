@@ -3,7 +3,7 @@
 
 int binarySearch(const int b[], int searchKey, int low, int high);
 void printHeader(void);
-void printRow(const int b[], int low, int mid, int hight);
+void printRow(const int b[], int low, int mid, int high);
 
 int main(void)
 {
@@ -33,15 +33,15 @@ int main(void)
 	}
 }
 
-int binarySearch(const int b[], int searchKey, int low, int hight)
+int binarySearch(const int b[], int searchKey, int low, int high)
 {
 	int middle;
 	
-	if(low <= hight)
+	if(low <= high)
 	{
-		middle = (low + hight) / 2;
+		middle = (low + high) / 2;
 		
-		printRow(b, low, middle, hight);
+		printRow(b, low, middle, high);
 		
 		if(searchKey == b[middle])
 		{
@@ -51,13 +51,13 @@ int binarySearch(const int b[], int searchKey, int low, int hight)
 		{
 			if(searchKey < b[middle])
 		    {
-			    hight = middle - 1;
+			    high = middle - 1;
 		    }
 		    else
 			{
 			    low = middle + 1;
 			}
-			return binarySearch( b, searchKey, low, hight);
+			return binarySearch( b, searchKey, low, high);
 		}
 	}
 	return - 1;
