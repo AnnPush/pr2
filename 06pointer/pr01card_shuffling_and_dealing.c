@@ -14,6 +14,8 @@ void deal(unsigned int wDeck[][FACES], unsigned int wHand[][2], const char *wFac
 void oneOfPair(unsigned int wHand[][2], const char *wFace[]);
 void twoOfPair(unsigned int wHand[][2],  const char *wFace[]);
 void treeOfCard(unsigned int wHand[][2],  const char *wFace[]);
+void fourOfCard(unsigned int wHand[][2],  const char *wFace[]);
+void flashOfCard(unsigned int wHand[][2],  const char *wSuit[]);
 
 int main(void)
 { //4_ инициализация колоды карт_комбинация_2_ПАРЫ_у_первого_игрока
@@ -39,6 +41,8 @@ int main(void)
      oneOfPair(hand, face);
      twoOfPair(hand, face);
 	 treeOfCard(hand, face);
+	 fourOfCard(hand, face);
+	 flashOfCard(hand, suit);
 }
 
 // shuffle cards in deck
@@ -154,4 +158,42 @@ void treeOfCard(unsigned int wHand[][2],  const char *wFace[])
 		 }
      }  
 }
+void fourOfCard(unsigned int wHand[][2],  const char *wFace[])
+{
+     unsigned int counter[FACES]={0};
+     
+     size_t i;
+     
+     for( i = 0; i < 5; ++i)
+     {
+         ++counter[wHand[i][1]];
+     }
+     
+     for( i = 0; i < FACES; ++i)
+     {
+		 if(counter[i] == 4 )
+         {
+             printf("\nThe hand contains a 4 card %s\n", wFace[i] );
+		 }
+     }  
+}
 
+void flashOfCard(unsigned int wHand[][2],  const char *wSuit[])
+{
+     unsigned int counter[SUITS]={0};
+     
+     size_t i;
+     
+     for( i = 0; i < 5; ++i)
+     {
+         ++counter[wHand[i][0]];
+     }
+     
+     for( i = 0; i < FACES; ++i)
+     {
+		 if(counter[i] == 5 )
+         {
+             printf("\nThe hand contains a FLASH card %s\n", wSuit[i] );
+		 }
+     }  
+}
