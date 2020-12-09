@@ -13,6 +13,7 @@ void shuffle(unsigned int wDeck[][FACES]); // shuffling modifies wDeck
 void deal(unsigned int wDeck[][FACES], unsigned int wHand[][2], const char *wFace[], const char *wSuit[]); // dealing doesn't modify the arrays
 void oneOfPair(unsigned int wHand[][2], const char *wFace[]);
 void twoOfPair(unsigned int wHand[][2],  const char *wFace[]);
+void treeOfCard(unsigned int wHand[][2],  const char *wFace[]);
 
 int main(void)
 { //4_ инициализация колоды карт_комбинация_2_ПАРЫ_у_первого_игрока
@@ -37,6 +38,7 @@ int main(void)
      deal(deck, hand, face, suit); // deal the deck
      oneOfPair(hand, face);
      twoOfPair(hand, face);
+	 treeOfCard(hand, face);
 }
 
 // shuffle cards in deck
@@ -118,8 +120,6 @@ void twoOfPair(unsigned int wHand[][2],  const char *wFace[])
      unsigned int counter[FACES]={0};
      
      size_t i;
-     size_t pair;//переменная для запоминания номинала пары
-	 size_t n = 0;//количество одинаковых карт на руках у игрока
      
      for( i = 0; i < 5; ++i)
      {
@@ -130,7 +130,28 @@ void twoOfPair(unsigned int wHand[][2],  const char *wFace[])
      {
 		 if(counter[i] == 2 )
          {
-             printf("\nThe hand contains a pair %s\n", wFace[i] );
+             printf("\nThe hand contains a 2 pair %s\n", wFace[i] );
 		 }
      }  
 }
+
+void treeOfCard(unsigned int wHand[][2],  const char *wFace[])
+{
+     unsigned int counter[FACES]={0};
+     
+     size_t i;
+     
+     for( i = 0; i < 5; ++i)
+     {
+         ++counter[wHand[i][1]];
+     }
+     
+     for( i = 0; i < FACES; ++i)
+     {
+		 if(counter[i] == 3 )
+         {
+             printf("\nThe hand contains a 3 card %s\n", wFace[i] );
+		 }
+     }  
+}
+
