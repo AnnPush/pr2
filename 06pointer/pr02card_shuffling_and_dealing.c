@@ -10,11 +10,11 @@ void shuffle(unsigned int wDeck[][FACES]);
 //раздать карты игрокам
 void deal(unsigned int wDeck[][FACES], unsigned int wPlayer[][2], const char *wFace[], const char *wSuit[], unsigned int start,  unsigned int finish);
 //оценка карт игроков
-void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int wSortPlayer1[], unsigned int wSortPlayer2[], unsigned int *nominal1, unsigned int *nominal2);
+void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int *nominal1, unsigned int *nominal2);
 
 int  printRating(unsigned int*, unsigned int*);//печать результата оценивания карт
 int fPriority(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal);//определение приоритета карт игроков
-void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[], unsigned int wSortPlayer[]);//сортировка карт, которые находятся на руках у каждого игрока
+void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[]);//сортировка карт, которые находятся на руках у каждого игрока
 
 int main(void)
 {   
@@ -23,8 +23,6 @@ int main(void)
 	unsigned int player1[5][2];//карты на руках у первого игрока
 	unsigned int player2[5][2];//карты на руках у второго игрока
 	 
-	unsigned int sortPlayer1[5];//сортированный массив карт на руках у первого игрока
-	unsigned int sortPlayer2[5];//сортированный массив карт на руках у второго игрока
 	unsigned int nominal1;
     unsigned int nominal2;
 	   
@@ -43,7 +41,7 @@ int main(void)
 	deal(deck, player1, face, suit, 1, 5);
 	
 	printf("\nHand1_sort\n\n");
-	sort(player1, face, suit, sortPlayer1);
+	sort(player1, face, suit);
 	
     printf("\nHand2\n\n");
 
@@ -51,13 +49,13 @@ int main(void)
 	deal(deck, player2, face, suit, 6, 10);
 	
 	printf("\nHand2_sort\n\n");
-	sort(player2, face, suit, sortPlayer2);
+	sort(player2, face, suit);
 	
 	//оценить карты игроков
-	mark(player1, player2, face, suit, sortPlayer1, sortPlayer2, &nominal1, &nominal2);	
+	mark(player1, player2, face, suit, &nominal1, &nominal2);	
 }
 
-void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int wSortPlayer1[], unsigned int wSortPlayer2[], unsigned int *nominal1, unsigned int *nominal2)
+void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int *nominal1, unsigned int *nominal2)
 {
 	unsigned int p1, p2;
     int flag = 0;
@@ -71,7 +69,7 @@ void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wF
 		{
 		    for(size_t i =0 ; i < 5; ++i)
 			{
-				if(!printRating(&wSortPlayer1[i], &wSortPlayer2[i]))//если номиналы равны, сравнение идет по сортированному массиву по старшей карте
+				if(!printRating(&wPlayer1[i][1], &wPlayer2[i][1]))//если номиналы равны, сравнение идет по сортированному массиву по старшей карте
 		        {
 					flag++;
 				}
@@ -88,33 +86,19 @@ void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wF
 	} 
 }
 
-void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[], unsigned int wSortPlayer[])
+void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[])
 {
 	void swap(unsigned int * element1Ptr, unsigned int * element2Ptr);//функция обменивающая карты в ячейках, на которые показывают указатели
 
-    unsigned int counter[FACES]={0};//сколько одинаковых номиналов карт на руках у игрока
-    unsigned int counter1[SUITS]={0};//сколько одинаковых мастей карт на руках у игрока
-    
-    for(unsigned int r = 0; r < 5; ++r)
-    {
-        ++counter[wPlayer[r][1]];//считаем, сколько одинаковых номиналов карт на руках у игрока
-        ++counter1[wPlayer[r][0]];//считаем, сколько одинаковых мастей карт на руках у игрока
-		wSortPlayer[r] = wPlayer[r][1];//заполняем массив номиналов карт, которые на руках у игрока
-		
-    }
 	for( size_t i = 0; i < 4; ++i)
     {
 		for( size_t j = 0; j < 4; ++j)
         {
-			if(wSortPlayer[j] < wSortPlayer[j+1])
-				swap(&wSortPlayer[j], &wSortPlayer[j+1]);//обмен элементов		
+			if(wPlayer[j][1] < wPlayer[j+1][1])
+				swap(&wPlayer[j][1], &wPlayer[j+1][1]);//обмен элементов		
 		}
 	}
-	  
-	for(unsigned int r = 0; r < 5; ++r)
-    {
-	    wPlayer[r][1] = wSortPlayer[r];//заполняем массив номиналов карт, которые на руках у игрока
-	}
+	
 	for( size_t i = 0; i < 5; ++i)
     {	
 		printf("%5s of %-8s\n ", wFace[ wPlayer[i][1]],  wSuit[ wPlayer[i][0]] );
