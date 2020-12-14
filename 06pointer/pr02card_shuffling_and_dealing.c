@@ -95,7 +95,10 @@ void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[]
 		for( size_t j = 0; j < 4; ++j)
         {
 			if(wPlayer[j][1] < wPlayer[j+1][1])
-				swap(&wPlayer[j][1], &wPlayer[j+1][1]);//обмен элементов		
+			{
+				swap(&wPlayer[j][1], &wPlayer[j+1][1]);//обмен элементов	
+                swap(&wPlayer[j][0], &wPlayer[j+1][0]);		
+			}				
 		}
 	}
 	
