@@ -11,114 +11,143 @@
 void shuffle(unsigned int wDeck[][FACES]);
 //раздать карты игрокам
 void deal(unsigned int wDeck[][FACES], unsigned int wPlayer[][2], unsigned int *wStart,  unsigned int *wFinish);
-int fPriority(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);//определение приоритета карт игроков
-void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[]);//сортировка карт, которые находятся на руках у каждого игрока
-void printArray(unsigned int wPlayer[][2], const char *wFace[], const char *wSuit[], unsigned int pd);//распечатать карты игрока
-void takeCards(unsigned int wPlayer[][2], unsigned int *prioritet, unsigned int *takeCard, unsigned int *nominal);//сколько еще взять карт
-void swap(unsigned int * element1Ptr, unsigned int * element2Ptr);//функция обменивающая карты в ячейках, на которые показывают указатели
+//определение приоритета карт игроков
+int fPriority(unsigned int wPlayer[][2], unsigned int *nominal);
+//сортировка карт, которые находятся на руках у каждого игрока
+void  sort(unsigned int wPlayer[][2]);
+//распечатать карты игрока
+void printArray(unsigned int wPlayer[][2], const char *wFace[], const char *wSuit[], unsigned int pd);
+//сколько еще взять карт
+void takeCards(unsigned int *prioritet, unsigned int *takeCard);
+//функция, обменивающая карты в ячейках
+void swap(unsigned int * element1Ptr, unsigned int * element2Ptr);
 //оценка карт игроков
-void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int *nominal1, unsigned int *nominal2, unsigned int *p1, unsigned int *p2);
-int  printRating(unsigned int*, unsigned int*);//печать результата оценивания карт
+void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], unsigned int *nominal1, unsigned int *nominal2, unsigned int *p1, unsigned int *p2);
+
+
+void sortTakeCards(unsigned int wPlayer[][2], unsigned int *prioritet, unsigned int *takeCard, unsigned int *nominal);
 
 int main(void)
 {   
-    unsigned int deck[SUITS][FACES] = {0};
-      
+    unsigned int deck[SUITS][FACES] = {0};//инициализировать массив колоды карт
+
 	unsigned int player1[5][2];//карты на руках у первого игрока
 	unsigned int player2[5][2];//карты на руках у второго игрока
-	unsigned int pl_dl = 0;//если дилер - 1, если игрок -0  
-	unsigned int nominal1;
-    unsigned int nominal2;
-	unsigned int start = 1;
-	unsigned int finish = 5;  
-	unsigned int p1, p2;
+	
+	unsigned int pl_dl = 0;//если дилер - 1, если игрок - 0  
+	
+	unsigned int nominal1;//сумма номиналов карт первого игрока
+    unsigned int nominal2;//сумма номиналов карт второго игрока
+	
+	unsigned int start = 1;//с какой карты начинается раздача карт
+	unsigned int finish = 5; //какая карта последняя при раздаче карт
+	
+	unsigned int p1, p2;//приоритет 1 и 2 игрока
+	
 	srand(time(NULL)); 
-    shuffle(deck); // shuffle the deck
+    shuffle(deck);//перетасовать карты
 
+    // инициализация массива мастей
     const char *suit[SUITS] = {"Hearts", "Diamonds", "Clubs", "Spades"};
 	
+	// инициализация массива номиналов(значений)
     const char *face[FACES] = {"Ace", "Deuce", "Three", "Four",
                                 "Five", "Six", "Seven", "Eight",
                                 "Nine", "Ten", "Jack", "Queen", "King"};
 	
-    printf("\nHand1\n\n");
-	
-	
-	//сдать карты первому игроку с 1 по 5
+    //сдать карты первому игроку с 1 по 5
+    printf("\nDEALER_________________________\n\n");
 	deal(deck, player1, &start, &finish); 
 	printArray(player1, face, suit, 1);
-	//printf("\nHand1_sort\n\n");
-	sort(player1, face, suit);
+	//printf("\nDEALER_sort\n\n");
+	
+	//сортировка массива карт дилера
+	sort(player1);
 	//printArray(player1, face, suit, 0);
 	
-	printf("\nHand2\n\n");
 	//сдать карты второму игроку с 6 по 10
-	finish = 5;
+	printf("\nPLAYER\n\n");
+		finish = 5;
 	deal(deck, player2, &start, &finish);
 	printArray(player2, face, suit, 0);
-	printf("\nHand2_sort\n\n");
-	sort(player2, face, suit);
+	
+	//сортировка массива карт игрока
+	printf("\nPLAYER_sort\n\n");
+	sort(player2);
 	printArray(player2, face, suit, 0);
 	
-	
-	p1 = fPriority(player1, face, suit, &nominal1, 1);
+	//определить приоритет карт дилера
+	p1 = fPriority(player1,&nominal1);
 	//printf("\nPriority_1 = %u\n\n", p1);
 	
-    takeCards(player1, &p1, &finish, &nominal1);
-	 printf("\nTake %u cards!\n\n",finish);
-	 if(finish != 0)
-	 {
-		 deal(deck, player1,  &start, &finish);	 
-		 //printf("\nNew_array_1\n");
-		 //printArray(player1, face, suit, 0);
-		 
-		 //printf("\nHand1_sort_new\n\n");
-	sort(player1, face, suit);
+	//автоматически определить, сколько карт возьмет дилер
+    takeCards(&p1, &finish);
+	//printf("\nHand1_sort\n\n");
+	sortTakeCards(player1, &p1, &finish, &nominal1);
 	//printArray(player1, face, suit, 0);
-	 }
-	 
-	 p1 = fPriority(player1, face, suit, &nominal1, 1);
+    printf("\nDEALER\n\n");
+	printf("\nTake %u cards!\n\n",finish);
+	
+	//раздать новые карты дилеру
+	if(finish != 0)
+	{
+		deal(deck, player1,  &start, &finish);	 
+		//printf("\nNew_array_1\n");
+		//printArray(player1, face, suit, 0);
+		//printf("\nHand1_sort_new\n\n");
+		
+		//сортировка новых карт дилера
+	    sort(player1);
+	    //printArray(player1, face, suit, 0);
+	}
+	
+	//опрределить приоритет новых карт дилера
+	p1 = fPriority(player1, &nominal1);
 	//printf("\nPriority_1_new = %u\n\n", p1);
 	
 	
-
-	 printf("\nHand2-------------------\n\n");
-	 
-	 p2 = fPriority(player2, face, suit, &nominal2, 0);
+    //приоритет карт игрока
+	printf("\nPLAYER-------------------\n\n");
+	p2 = fPriority(player2,  &nominal2);
 	printf("\nPriority_2 = %u\n\n", p2);
 	
-	 takeCards(player2, &p2, &finish, &nominal2);
-	 printf("\nHow many cards do you want to take?\n\n");
-	 scanf("%u", &finish);
-	 	 if(finish != 0)
-	 {
-		 deal(deck, player2, &start, &finish);
-	
-		 printf("\nNew_array_2\n");
-		 printArray(player2, face, suit, 0);
-		 printf("\nHand2_sort_new\n\n");
-	sort(player2, face, suit);
+			printf("\nPLAYER_sort_new\n\n");
+			//выпавшие комбинации карт передвинуть в конец массива
+	sortTakeCards(player2, &p2, &finish, &nominal2);
 	printArray(player2, face, suit, 0);
-	 }
-	 p2 = fPriority(player2, face, suit, &nominal2, 0);
-	printf("\nPriority_2_new = %u\n\n", p2);
+	//сколько карт желает взять игрок
+	printf("\nHow many cards do you want to take?\n\n");
+	scanf("%u", &finish);
 	
+	if(finish != 0)
+	{
+		//выдать новые карты игроку
+		deal(deck, player2, &start, &finish);
+		printf("\nPLAYER_New_array_2\n");
+		printArray(player2, face, suit, 0);
+		//сортировать новые карты
+		printf("\nPLAYER_sort_new\n\n");
+	    sort(player2);
+	    printArray(player2, face, suit, 0);
+	}
+	//определить приоритет карт игрока
+	p2 = fPriority(player2,  &nominal2);
+	printf("\nPriority_2_new = %u\n\n", p2);
+
+    //распечатать карты, которые на руках у играющих
 	printf("\nMark\n\n");
-	printf("\nHand1\n\n");
+	printf("\nDEALER\n\n");
 	printArray(player1, face, suit, 0);
-	printf("\nHand2\n\n");
+	printf("\nPLAYER\n\n");
 	printArray(player2, face, suit, 0);
 	//оценить карты игроков
-	mark(player1, player2, face, suit, &nominal1, &nominal2, &p1, &p2);	
-	
-	
+	mark(player1, player2,&nominal1, &nominal2, &p1, &p2);		
 }
-void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wFace[], const  char *wSuit[], unsigned int *nominal1, unsigned int *nominal2, unsigned int *p1, unsigned int *p2)
-{
-	
+
+void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], unsigned int *nominal1, unsigned int *nominal2, unsigned int *p1, unsigned int *p2)
+{//печать результата оценивания карт
+int  printRating(unsigned int*, unsigned int*);
     int flag = 0;
-	
-	
 	
 	if(!printRating(p1, p2))//сравнить комбинации карт
 	{
@@ -136,7 +165,7 @@ void mark(unsigned int wPlayer1[][2], unsigned int wPlayer2[][2], const char *wF
 				}
 				if( flag == 5)
 				{
-                    printf("\nHand1 = Hand2\n");//карты игроков равны
+                    printf("\nCARD_DEALER = CARD_PLAYER\n");//карты игроков равны
 			    }
 			}
 		}
@@ -158,10 +187,9 @@ int printRating(unsigned  int* ptr1, unsigned  int* ptr2)
     return 0;
 }
 
-void takeCards(unsigned int wPlayer[][2], unsigned int *prioritet, unsigned int *takeCard, unsigned int *nominal)
+void takeCards(unsigned int *prioritet, unsigned int *takeCard)
 {
-	unsigned int wSortPlayer[5][2] = {0};//временный массив
-	unsigned int obmen = 0;//счетчик для карт, которые будут обмениваться
+	
 	unsigned int take_card = 0;//счетчик карт, которые составляют комбинацию
 	
     if( *prioritet < 7 && *prioritet > 3)//если выпало 4 одинаковые карты флеш, стрит
@@ -182,28 +210,33 @@ void takeCards(unsigned int wPlayer[][2], unsigned int *prioritet, unsigned int 
 	} 
 	*takeCard = take_card;//запоминаем количество карт, которые будут взяты
    
-if(*prioritet == 2 )
-			{
-				if(wPlayer[3][1] != wPlayer[4][1])
-			{
-				swap(&wPlayer[0][1], &wPlayer[4][1]);
-				swap(&wPlayer[0][0], &wPlayer[4][0]);
-				swap(&wPlayer[1][1], &wPlayer[3][1]);
-				swap(&wPlayer[1][0], &wPlayer[3][0]);
-			
-			}
-			else if( wPlayer[2][1] != wPlayer[1][1])
-			{
-				swap(&wPlayer[0][1], &wPlayer[2][1]);
-				swap(&wPlayer[0][0], &wPlayer[2][0]);
-				
-			}
-			}
+    
+}
+void sortTakeCards(unsigned int wPlayer[][2], unsigned int *prioritet, unsigned int *takeCard, unsigned int *nominal)
+{
+	unsigned int wSortPlayer[5][2] = {0};//временный массив
+	unsigned int obmen = 0;//счетчик для карт, которые будут обмениваться
+	unsigned int take_card = *takeCard;//счетчик карт, которые составляют комбинацию
+	//передвинуть выпавшие комбинации карт в конец массива
+    if(*prioritet == 2 )
+	{
+		if(wPlayer[3][1] != wPlayer[4][1])
+		{
+			swap(&wPlayer[0][1], &wPlayer[4][1]);
+			swap(&wPlayer[0][0], &wPlayer[4][0]);
+			swap(&wPlayer[1][1], &wPlayer[3][1]);
+			swap(&wPlayer[1][0], &wPlayer[3][0]);
+		}
+		else if( wPlayer[2][1] != wPlayer[1][1])
+		{
+			swap(&wPlayer[0][1], &wPlayer[2][1]);
+			swap(&wPlayer[0][0], &wPlayer[2][0]);
+		}
+	}
 	else if(*prioritet != 2 && *prioritet < 4)//все варианты, кроме флеш, 4 карты, стрит
     {
        for( size_t i = 0; i < 5; ++i)
-	   {
-		    
+	   {  
 			if(wPlayer[i][1] != *nominal )// элемент массива не равен номиналу комбинации
 		    {
 				//карта отправляется в начало массива
@@ -213,13 +246,12 @@ if(*prioritet == 2 )
 		    }
 			else 
 		    { 
-				
 				wSortPlayer[take_card][1] = wPlayer[i][1];
 				wSortPlayer[take_card][0] = wPlayer[i][0];
 				++take_card;
 		    }
 	   }
-	   //перезависать из временного массива карты
+	   //перезаписать из временного массива карты
 	   for( size_t i = 0; i < 5; ++i)
 	   {
 	        wPlayer[i][1]=wSortPlayer[i][1];
@@ -227,7 +259,6 @@ if(*prioritet == 2 )
 	   }
 	}
 }
-
 //распечатать карты игрока
 void printArray(unsigned int wPlayer[][2], const char *wFace[], const char *wSuit[], unsigned int pd)
 {
@@ -246,10 +277,8 @@ void printArray(unsigned int wPlayer[][2], const char *wFace[], const char *wSui
 }
 
 
-void  sort(unsigned int wPlayer[][2],  const char *wFace[], const  char *wSuit[])
+void  sort(unsigned int wPlayer[][2])
 {
-	
-
 	for( size_t i = 0; i < 4; ++i)
     {
 		for( size_t j = 0; j < 4; ++j)
@@ -271,22 +300,22 @@ void swap(unsigned int * element1Ptr, unsigned int * element2Ptr)
 }
 
 
-int fPriority(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned  int *nominal, unsigned int pd)
+int fPriority(unsigned int wPlayer[][2],  unsigned  int *nominal)
 {
-	int oneOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);
-    int twoOfPair(unsigned int wPlayer[][2],  const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);
-    int treeOfCard(unsigned int wPlayer[][2],  const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);
-    int fourOfCard(unsigned int wPlayer[][2],  const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);
-    int flashOfCard(unsigned int wPlayer[][2],  const char *wFace[], const char *wSuit[], unsigned int *nominal, unsigned int pd);
-    int straighOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd);
+	int oneOfPair(unsigned int wPlayer[][2],  unsigned int *nominal);
+    int twoOfPair(unsigned int wPlayer[][2],  unsigned int *nominal);
+    int treeOfCard(unsigned int wPlayer[][2],  unsigned int *nominal);
+    int fourOfCard(unsigned int wPlayer[][2],  unsigned int *nominal);
+    int flashOfCard(unsigned int wPlayer[][2],  unsigned int *nominal);
+    int straighOfCard(unsigned int wPlayer[][2], unsigned int *nominal);
 
-    int (*ptr_f[6])(unsigned int [][2], const char* [], const char* [], unsigned int *, unsigned int) = {oneOfPair, twoOfPair, treeOfCard, straighOfCard, flashOfCard, fourOfCard};
+    int (*ptr_f[6])(unsigned int [][2], unsigned int *) = {oneOfPair, twoOfPair, treeOfCard, straighOfCard, flashOfCard, fourOfCard};
 
     unsigned int priority;
 	
 	for(int i = 0; i < 6; ++i)
 	{
-		priority =(*ptr_f[i])(wPlayer, wFace, wSuit, nominal, pd);
+		priority =(*ptr_f[i])(wPlayer, nominal);
 		if(priority > 0)
 		{
 			return priority;
@@ -339,7 +368,7 @@ void deal(unsigned int wDeck[][FACES], unsigned int wPlayer[][2],  unsigned int 
 	 *wStart = *wFinish;
 }
 
-int oneOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd)
+int oneOfPair(unsigned int wPlayer[][2], unsigned int *nominal)
 {
      unsigned int counter[FACES]={0};
      
@@ -362,16 +391,13 @@ int oneOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit
      }
      if(n == 1)
      {
-		 if(pd == 0)
-		 {
-        printf("\nThe hand contains a pair %s\n", wFace[*nominal] );
-		 }
+		 
 		return 1;
 	 }
 	 return 0;
 }
 
-int twoOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd)
+int twoOfPair(unsigned int wPlayer[][2], unsigned int *nominal)
 {
     unsigned int counter[FACES]={0};
     *nominal = 0;
@@ -390,8 +416,7 @@ int twoOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit
         {  
            ++n;
            *nominal += i;
-		   if(pd == 0)
-           printf("\nThe hand contains a 2 %s \n", wFace[i]);
+		   
 		}		 	
     } 
     if(n == 2)
@@ -401,7 +426,7 @@ int twoOfPair(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit
 	return 0;
 }
 
-int treeOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd)
+int treeOfCard(unsigned int wPlayer[][2], unsigned int *nominal)
 {
     unsigned int counter[FACES]={0};
      
@@ -417,15 +442,14 @@ int treeOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSui
 		if(counter[i] == 3 )
         {
 			*nominal = i;
-			if(pd == 0)
-            printf("\nThe hand contains a 3 card %s\n", wFace[i] );
+			
 			return 3;
 		}
     }
     return 0;	 
 }
 
-int fourOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[],  unsigned int *nominal, unsigned int pd)
+int fourOfCard(unsigned int wPlayer[][2],  unsigned int *nominal)
 {
     unsigned int counter[FACES]={0};
      
@@ -441,15 +465,14 @@ int fourOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSui
 		if(counter[i] == 4 )
         {
 			*nominal = i;
-			if(pd == 0)
-            printf("\nThe hand contains a 4 card %s\n", wFace[i] );
+			
 			return 6;
 		}
     } 
     return 0;	 
 }
 
-int flashOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd)
+int flashOfCard(unsigned int wPlayer[][2], unsigned int *nominal)
 {
     unsigned int counter[SUITS]={0};
     size_t i;
@@ -463,15 +486,14 @@ int flashOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSu
     {
 		if(counter[i] == 5 )
         {
-			if(pd == 0)
-            printf("\nThe hand contains a FLASH card %s\n", wSuit[i] );
+			
 			return 5;
 		}
     } 
     return 0;	 
 }
 
-int straighOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *wSuit[], unsigned int *nominal, unsigned int pd)
+int straighOfCard(unsigned int wPlayer[][2],  unsigned int *nominal)
 { 
     size_t i;
      
@@ -482,8 +504,7 @@ int straighOfCard(unsigned int wPlayer[][2], const char *wFace[],  const char *w
      
 	if(wPlayer[4][1] - 1 == wPlayer[3][1] && wPlayer[3][1] - 1 == wPlayer[2][1] && wPlayer[2][1] - 1 == wPlayer[1][1] && wPlayer[1][1] - 1 == wPlayer[0][1])
 	{
-		if(pd == 0)
-		printf("\nThe hand contains a STRAIGHT from %s to %s\n", wFace[wPlayer[4][1]], wFace[wPlayer[0][1]]);
+		
 		return 4;
 	}	
     return 0;	
