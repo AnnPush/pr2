@@ -56,7 +56,7 @@ int main(void)
 			if(checkword(memory[i], SIZE))
 			{
 			    printf("***Invalid instruction: %d\n", memory[i]);
-				printf(***Please retype it or exit.\n");
+				printf("***Please retype it or exit.\n");
 			}
 			else
 				break;
@@ -83,14 +83,14 @@ int main(void)
 			break;
 			  
 			case  WRITE:
-			printf(\nMemory location: %.2\nWord: %d\n ASCII: %c\n", operand, memory[operand], memory[operand]);
+			printf("\nMemory location: %.2\nWord: %d\n ASCII: %c\n", operand, memory[operand], memory[operand]);
 			break;
 			  
 			case LOAD:
 			accumulator = memory[operand];
 			break;
 			  
-			case: STORE:
+			case STORE:
 			memory[operand] = accumulator;
 			break;
 			  
@@ -100,7 +100,7 @@ int main(void)
 				err = 1;
 			break;
 			  
-			case SUBSTRACT:
+			case SUBTRACT:
 			accumulator -= memory[operand];
 			if(accumulator > +99999 || accumulator < -99999)
 				err = 1;
@@ -168,6 +168,47 @@ int checkword(int word, int size)
 	}
 	switch(word / 100)
 	{
-		
+		case READ:
+		case WRITE:
+		case LOAD:
+		case STORE:
+		case ADD:
+		case SUBTRACT:
+		case MULTYPLY:
+		case BRANCH:
+		case BRANCHNEG:
+		case BRANCHZERO:
+		case HALT:
+		case 0:
+		break;
+		default:
+		return 1;
 	}
+	return 0;
+}
+
+void dump(int acc, int icounter, int mem[])
+{
+	int i, j;
+	printf("\nREGISTERS:\n");
+	printf("accumulator\t\t%c%.4d\n"
+	"instructionCounter\t%.2d\n"
+	"instructionRegister\t%c%.4d\n"
+	"operationCode\t\t%.2d\n"
+	"operand\t\t%.2d\n",
+	acc < 0 ? '-' : '+', acc < 0 ? -acc : acc, icounter, mem[icounter] < 0 ? '-' : '+', mem[icounter] < 0 ? -mem[icounter] : mem[icounter], mem[icounter] / 100, mem[icounter] % 100);
+	printf("\nMEMORY\n");
+	printf("%3c", ' ');
+	for(i = 0; i < 10; ++i)
+		printf("%5d", i);
+	puts("");
+	for(i = 0; i < SIZE; i += 10)
+	{
+		printf("%.2d", i);
+	    for(j = i; j < i + 10; ++j)
+	    {
+		    printf("%c%.4d", mem[j] < 0 ? '-' : '+', mem[j] < 0 ? -mem[j] : mem[j]);
+	    }
+	    puts("");
+    }
 }
