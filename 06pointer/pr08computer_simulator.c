@@ -44,7 +44,8 @@ int main(void)
 	{
 		while(1)
 		{
-			printf("%.2d ??", i);
+			//ввести команды программы
+			printf("%.2d ??  ", i);
 			scanf("%d", &memory[i]);
 			  
 			if(memory[i] == -99999)
@@ -55,16 +56,16 @@ int main(void)
 		    }
 			if(checkword(memory[i], SIZE))
 			{
-			    printf("***Invalid instruction: %d\n", memory[i]);
-				printf("***Please retype it or exit.\n");
+			    printf("***Ошибка: %d\n", memory[i]);
+				printf("***Повторите введение команды или выход.\n");
 			}
 			else
 				break;
 		}
 	}
 	  
-	printf("*** Program loading completed ***\n"
-	  "*** Program execution begins ***\n");
+	printf("*** Загрузка программы завершена ***\n"
+	  "*** Начинаю выполнение программы ***\n");
 	  
 	for(i = 0; i < SIZE; ++i)
 	{
@@ -78,12 +79,12 @@ int main(void)
 		switch(operationCode)
 		{
 			case READ:
-			printf("Insert a word: ");
+			printf("Введите значение: ");
 			scanf("%d", &memory[operand]);
 			break;
 			  
 			case  WRITE:
-			printf("\nMemory location: %.2\nWord: %d\n ASCII: %c\n", operand, memory[operand], memory[operand]);
+			printf("\nMemory location: %.2d\nWord: %d\n ", operand, memory[operand]);
 			break;
 			  
 			case LOAD:
@@ -127,7 +128,7 @@ int main(void)
 			break;
 
 			case HALT:
-			printf("*** Simpletron execution terminated ***\n");
+			printf("*** Симплертон закончил свои вычисления ***\n");
 			dump(accumulator, i, memory);
 			return 0;
 			break;
@@ -191,23 +192,23 @@ void dump(int acc, int icounter, int mem[])
 {
 	int i, j;
 	printf("\nREGISTERS:\n");
-	printf("accumulator\t\t%c%.4d\n"
+	printf(" accumulator\t\t%c%.4d\n"
 	"instructionCounter\t%.2d\n"
 	"instructionRegister\t%c%.4d\n"
 	"operationCode\t\t%.2d\n"
 	"operand\t\t%.2d\n",
 	acc < 0 ? '-' : '+', acc < 0 ? -acc : acc, icounter, mem[icounter] < 0 ? '-' : '+', mem[icounter] < 0 ? -mem[icounter] : mem[icounter], mem[icounter] / 100, mem[icounter] % 100);
 	printf("\nMEMORY\n");
-	printf("%3c", ' ');
+	printf("%2c", ' ');
 	for(i = 0; i < 10; ++i)
-		printf("%5d", i);
+		printf("%6d", i);
 	puts("");
 	for(i = 0; i < SIZE; i += 10)
 	{
 		printf("%.2d", i);
 	    for(j = i; j < i + 10; ++j)
 	    {
-		    printf("%c%.4d", mem[j] < 0 ? '-' : '+', mem[j] < 0 ? -mem[j] : mem[j]);
+		    printf("%2c%.4d", mem[j] < 0 ? '-' : '+', mem[j] < 0 ? -mem[j] : mem[j]);
 	    }
 	    puts("");
     }
