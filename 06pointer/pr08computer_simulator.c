@@ -105,9 +105,62 @@ int main(void)
 			if(accumulator > +99999 || accumulator < -99999)
 				err = 1;
 			break;
+			
+			case MULTYPLY:
+			accumulator *= memory[operand];
+			if(accumulator > +99999 || accumulator < -99999)
+				err = 1;
+			break;
+			
+			case BRANCH:
+			i = operand;
+			break;
+			
+			case BRANCHNEG:
+			if(accumulator < 0)
+			i = operand;
+			break;
 			  
-			  
-				  
-		  }
-	  }
+			case BRANCHZERO:
+			if(!accumulator)
+			i = operand;
+			break;
+
+			case HALT:
+			printf("*** Simpletron execution terminated ***\n");
+			dump(accumulator, i, memory);
+			return 0;
+			break;
+			
+			case 0:
+			break;
+			
+			default:
+			printf("*** Linknown error: %d\n", instructionRegister);
+			exit(-1);
+		}
+		if(err)
+		{
+			switch(err)
+			{
+				case 1:
+				printf("*** Out of the accumulator limit ***\n");
+				break;
+					
+				case 2:
+				printf("*** Attempt to divid by zero ***\n");
+				break;
+			}
+			printf("*** Simpletron execution abnormally terminated ***\n");
+			dump(accumulator, i, memory);
+			exit(-1);
+		}
+	}
+    dump(accumulator, i, memory);
+    return 0;
+}
+
+int checkword(int word, int size)
+{
+	
 }
