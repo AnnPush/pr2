@@ -162,5 +162,12 @@ int main(void)
 
 int checkword(int word, int size)
 {
-	
+	if(word < 0 || word > 9999 || word % 100 >= size)
+	{
+		return 1;
+	}
+	switch(word / 100)
+	{
+		
+	}
 }
