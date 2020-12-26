@@ -2,7 +2,8 @@
 
 void printArray(int a[], int size);
 void quicksort(int a[], int start, int finish);
-
+int dividing(int a[], int st, int fin);
+void swap(int *ptr1, int *ptr2);
 int main(void)
 {
 	int arr[] = {5, 87, 432, 3, 8, 45, 98756,321, 90, 789, 6};
@@ -25,49 +26,61 @@ void printArray(int a[], int size)
 
 void quicksort(int a[], int start, int finish)
 {
-	int dividing(int a[], int beginning, int end);
+	
 	int element;
 	if(start == finish)
 		return;
 	element = dividing(a, start, finish);
+	printf("%d\n", element);
+	printArray(a, 11);
 	if(element == start)
+	{puts("\nМассивd");
 		quicksort(a, element + 1, finish);
+	}
 	else if(element == finish)
-		quicksort(a, start, element - 1);
-	else
-	{
-		quicksort(a, element + 1, finish);
+	{puts("\nМассивdd");
 		quicksort(a, start, element - 1);
 	}
+	else
+	{puts("\nМассивddd");
+		quicksort(a, element + 1, finish);
+		printArray(a, 11);
+		quicksort(a, start, element - 1);
+		printArray(a, 11);
+	}
+	
 }
-int dividing(int a[], int beginning, int end)
+int dividing(int a[], int st, int fin)
 {	
-    void swap(int *ptr1, int *ptr2);
-    int x = 0; int y = end;
+    
+    int x = 0;
+    int y = fin;
 	while(1)
 	{
-		for(;y > beginning; y--)
+		for(;y > st; y--)
 		{
-			if(a[y] < a[beginning])
+			if(a[y] < a[st])
 			{
-				swap(&a[y], &a[beginning]);
-			    beginning = y;
+				swap(&a[y], &a[st]);
+			    st = y;
+				puts("\nМассив1");
 			    break;
 			}
 		}
-		for(;x < beginning; x++)
+		for(;x < st; x++)
 		{
-			if(a[x] > a[beginning])
+			if(a[x] > a[st])
 			{
-				swap(&a[x], &a[beginning]);
-			    beginning = 1;
+				swap(&a[x], &a[st]);
+			    st = 1;
+				puts("\nМассив2");
 			    break;
 			}
 		}
 		if(x == y)
 			break;
 	}
-	return beginning;
+	return st;
 }
 
 void swap(int *ptr1, int *ptr2)
