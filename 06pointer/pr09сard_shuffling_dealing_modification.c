@@ -19,7 +19,7 @@ int main(void)
 	const char *suit[SUITS] = {"Hearts", "Diamonds", "Clubs", "Spades"};
 	
 	const char *face[FACES] = {"Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
-	shuffleAndDeal(deck, face, SUITS);
+	shuffleAndDeal(deck, face, suit);
 	
 }
 
