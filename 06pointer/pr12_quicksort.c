@@ -9,7 +9,7 @@ int main(void)
 	int sizes = sizeof(arr) / sizeof(int);
 	puts("\nМассив до сортировки.");
 	printArray(arr, sizes);
-	
+	quicksort(arr, 0, sizes - 1);
 	puts("\n\nМассив после сортировки.");
 	printArray(arr, sizes);
 }
@@ -25,32 +25,54 @@ void printArray(int a[], int size)
 
 void quicksort(int a[], int start, int finish)
 {
-	int dividing(int a[], int x, int y);
-	
+	int dividing(int a[], int beginning, int end);
+	int element;
 	if(start == finish)
 		return;
+	element = dividing(a, start, finish);
+	if(element == start)
+		quicksort(a, element + 1, finish);
+	else if(element == finish)
+		quicksort(a, start, element - 1);
+	else
+	{
+		quicksort(a, element + 1, finish);
+		quicksort(a, start, element - 1);
+	}
 }
-int dividing(int a[], int x, int y)
+int dividing(int a[], int beginning, int end)
 {	
+    void swap(int *ptr1, int *ptr2);
+    int x = 0; int y = end;
 	while(1)
 	{
-		for(;y > x; y--)
+		for(;y > beginning; y--)
 		{
-			if(a[y] < a[x])
+			if(a[y] < a[beginning])
 			{
-				swap(&a[y], &a[x]);
-			    x = y;
+				swap(&a[y], &a[beginning]);
+			    beginning = y;
 			    break;
 			}
 		}
-		for(;x > y; x++)
+		for(;x < beginning; x++)
 		{
-			if(a[y] < a[x])
+			if(a[x] > a[beginning])
 			{
-				swap(&a[x], &a[x]);
-			    x = y;
+				swap(&a[x], &a[beginning]);
+			    beginning = 1;
 			    break;
 			}
 		}
+		if(x == y)
+			break;
 	}
+	return beginning;
+}
+
+void swap(int *ptr1, int *ptr2)
+{
+	int temp = *ptr1;
+	*ptr1 = *ptr2;
+	*ptr2 = temp;
 }
