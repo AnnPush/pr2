@@ -84,7 +84,7 @@ int main(void)
 			break;
 			  
 			case  WRITE:
-			printf("\nMemory location: %.2d\nWord: %d\n ", operand, memory[operand]);
+			printf("\nРазмещение в памяти: %.2d\nWord: %d\n ", operand, memory[operand]);
 			break;
 			  
 			case LOAD:
@@ -106,6 +106,12 @@ int main(void)
 			if(accumulator > +99999 || accumulator < -99999)
 				err = 1;
 			break;
+			
+			case DIVIDE:
+	        accumulator /= memory[operand];
+	        if( !memory[operand] )
+	        err = 2;
+	        break;
 			
 			case MULTYPLY:
 			accumulator *= memory[operand];
@@ -137,7 +143,7 @@ int main(void)
 			break;
 			
 			default:
-			printf("*** Linknown error: %d\n", instructionRegister);
+			printf("*** Ошибка: %d\n", instructionRegister);
 			exit(-1);
 		}
 		if(err)
@@ -145,14 +151,14 @@ int main(void)
 			switch(err)
 			{
 				case 1:
-				printf("*** Out of the accumulator limit ***\n");
+				printf("*** Привышение лимита аккумулятора ***\n");
 				break;
 					
 				case 2:
-				printf("*** Attempt to divid by zero ***\n");
+				printf("*** Попытка деления на ноль ***\n");
 				break;
 			}
-			printf("*** Simpletron execution abnormally terminated ***\n");
+			printf("*** Симплетрон аварийно завершил выполнение программы ***\n");
 			dump(accumulator, i, memory);
 			exit(-1);
 		}
@@ -175,6 +181,7 @@ int checkword(int word, int size)
 		case STORE:
 		case ADD:
 		case SUBTRACT:
+		case DIVIDE:
 		case MULTYPLY:
 		case BRANCH:
 		case BRANCHNEG:
