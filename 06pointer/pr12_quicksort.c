@@ -2,15 +2,16 @@
 
 void printArray(int a[], int size);
 void quicksort(int a[], int start, int finish);
-int dividing(int a[], int st, int fin);
-void swap(int *ptr1, int *ptr2);
 int main(void)
 {
-	int arr[] = {5, 87, 432, 3, 8, 45, 98756,321, 90, 789, 6};
+	int arr[] = {37, 2, 6, 4, 89, 8, 10, 12, 68, 45};
 	int sizes = sizeof(arr) / sizeof(int);
+
 	puts("\nМассив до сортировки.");
 	printArray(arr, sizes);
+	
 	quicksort(arr, 0, sizes - 1);
+	
 	puts("\n\nМассив после сортировки.");
 	printArray(arr, sizes);
 }
@@ -26,33 +27,28 @@ void printArray(int a[], int size)
 
 void quicksort(int a[], int start, int finish)
 {
+    int partition(int a[], int st, int fin);
+	int element; 
 	
-	int element;
 	if(start == finish)
 		return;
-	element = dividing(a, start, finish);
-	printf("%d\n", element);
-	printArray(a, 11);
+	
+	element = partition(a, start, finish);
+	
 	if(element == start)
-	{puts("\nМассивd");
 		quicksort(a, element + 1, finish);
-	}
 	else if(element == finish)
-	{puts("\nМассивdd");
 		quicksort(a, start, element - 1);
-	}
 	else
-	{puts("\nМассивddd");
+	{
 		quicksort(a, element + 1, finish);
-		printArray(a, 11);
 		quicksort(a, start, element - 1);
-		printArray(a, 11);
 	}
 	
 }
-int dividing(int a[], int st, int fin)
+int partition(int a[], int st, int fin)
 {	
-    
+   void swap(int *ptr1, int *ptr2); 
     int x = 0;
     int y = fin;
 	while(1)
@@ -63,7 +59,6 @@ int dividing(int a[], int st, int fin)
 			{
 				swap(&a[y], &a[st]);
 			    st = y;
-				puts("\nМассив1");
 			    break;
 			}
 		}
@@ -72,8 +67,7 @@ int dividing(int a[], int st, int fin)
 			if(a[x] > a[st])
 			{
 				swap(&a[x], &a[st]);
-			    st = 1;
-				puts("\nМассив2");
+			    st = x;
 			    break;
 			}
 		}
