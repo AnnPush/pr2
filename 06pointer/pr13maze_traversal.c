@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 #define SIZE 12
 
 void printArray(char a[][SIZE], int size);
@@ -21,4 +22,15 @@ int main(void)
 	};
 	
 	printArray(arr, SIZE);
+}
+void printArray(char a[][SIZE], int size)
+{
+	for(int i = 0; i < size; ++i)
+	{
+		for(int j = 0; j < size; ++j)
+		{
+			printf("%c", a[i][j]);
+		}
+		puts("");
+	}
 }
