@@ -8,15 +8,11 @@
 #define LEFT 3
 
 void printArray(char a[][SIZE], int size);//печать массива
-void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, int *firstposY);//движение по лабиринту
+void mazeTraversal(char a[][SIZE], int posX, int posY, int pos);//движение по лабиринту
 
 
 int main(void)
 {
-	//стартовая позиция
-	int firstX = 2;
-	int firstY = 0;
-	
 	char arr[SIZE][SIZE] = {
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
 		{'#', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '#'},
@@ -32,7 +28,7 @@ int main(void)
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
 	};
 	
-	mazeTraversal(arr, 2, 0, RIGHT, &firstX, &firstY);	
+	mazeTraversal(arr, 2, 0, RIGHT);	
 }
 void printArray(char a[][SIZE], int size)
 {   
@@ -48,10 +44,13 @@ void printArray(char a[][SIZE], int size)
 	}
 }
 
-void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, int *firstposY)
+void mazeTraversal(char a[][SIZE], int posX, int posY, int pos)
 {
 	int edge(int x, int y);//проверка(край массива), тогда игра окончена
 	int validMove(char a[][SIZE], int x, int y);// проверка, можно ли в ячейку записывать данные(это не стена)
+	//стартовая позиция
+	int firstX = 2;
+	int firstY = 0;
 	int position = 0;
 	
 	if(a[posX][posY] == 'x')//если мы были уже в ячейке, то поставить заглавную букву, чтобы легче было отслеживать путь по лабиринту
@@ -66,13 +65,13 @@ void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, 
 	printArray(a, SIZE);//печать после каждого шага, чтобы отслеживать движение по лабиринту
 	
 	//выхода из лабиринта не существует, поэтому игрок вернулся в точку входа(стартовую позицию)
-	if(posX == *firstposX && posY == *firstposY && position == 1)
+	if(posX == firstX && posY == firstY && position == 1)
 	{
 		printf("\n%s\n", "***Starting position***");
 		return;
 	}
 	//игра окончена, так как игрок находится на краю лабиринта, но это не стартовая точка
-    else if((edge(posX, posY) && posX != *firstposX) && posY != *firstposY)
+    else if((edge(posX, posY) && posX != firstX) && posY != firstY)
 	{
 		printf("\n%s\n", "***Done***");
 		return;
@@ -90,7 +89,7 @@ void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, 
 				case RIGHT:
 				if(validMove(a, posX, posY + 1))
 				{
-					mazeTraversal( a, posX, posY + 1, DOWN, firstposX, firstposY);
+					mazeTraversal( a, posX, posY + 1, DOWN);
 					
 	
 					return;
@@ -100,7 +99,7 @@ void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, 
 				case LEFT:
 				if(validMove(a, posX, posY - 1))
 				{
-					mazeTraversal( a, posX, posY - 1, UP, firstposX, firstposY);
+					mazeTraversal( a, posX, posY - 1, UP);
 					return;
 				} 
 				break;
@@ -108,7 +107,7 @@ void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, 
 				case UP:
 				if(validMove(a, posX - 1, posY))
 				{
-					mazeTraversal( a, posX - 1, posY, RIGHT, firstposX, firstposY);
+					mazeTraversal( a, posX - 1, posY, RIGHT);
 					return;
 				} 
 				break;
@@ -116,7 +115,7 @@ void mazeTraversal(char a[][SIZE], int posX, int posY, int pos, int *firstposX, 
 				case DOWN:
 				if(validMove(a, posX + 1, posY))
 				{
-					mazeTraversal( a, posX + 1, posY, LEFT, firstposX, firstposY);
+					mazeTraversal( a, posX + 1, posY, LEFT);
 					return;
 				} 
 				break;
