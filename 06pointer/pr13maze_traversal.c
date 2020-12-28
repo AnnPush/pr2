@@ -32,9 +32,7 @@ int main(void)
 		{'#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'}
 	};
 	
-	mazeTraversal(arr, 2, 0, RIGHT, &firstX, &firstY);
-	//printArray(arr, SIZE);
-		
+	mazeTraversal(arr, 2, 0, RIGHT, &firstX, &firstY);	
 }
 void printArray(char a[][SIZE], int size)
 {   
