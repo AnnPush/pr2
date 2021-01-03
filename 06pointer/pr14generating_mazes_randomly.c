@@ -11,6 +11,8 @@ void printArray(char a[][SIZE], int size);//печать массива
 void mazeTraversal(char a[][SIZE], int posX, int posY, int pos);//движение по лабиринту
 void mazeGenerator(char a[][SIZE], int ret[]);
 
+
+
 int main(void)
 {
 	char arr[SIZE][SIZE];
