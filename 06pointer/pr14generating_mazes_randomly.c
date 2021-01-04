@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define SIZE 12
 
@@ -7,40 +9,98 @@
 #define UP 2
 #define LEFT 3
 
-void printArray(char a[][SIZE], int size);//печать массива
-void mazeTraversal(char a[][SIZE], int posX, int posY, int pos);//движение по лабиринту
-void mazeGenerator(char a[][SIZE], int ret[]);
-
-
+void printArray(char a[][SIZE], int size);
+void mazeGenerator(char a[][SIZE], int posX, int posY);
+int isInBounds(int posX, int posY);
 
 int main(void)
 {
+    int row, col;
 	char arr[SIZE][SIZE];
-	int rets[4] = {0};
+	srand(time(NULL));
 	
-	mazeGenerator(arr, rets);
-	mazeTraversal(arr, 2, 0, RIGHT);	
+	for(row = 0; row < SIZE; row++)
+        for(col = 0; col < SIZE; col++)
+	        arr[row][col] = '#';
+			
+	row = 1 + rand() % (SIZE - 2); 
+    col = 0;
+	arr[row][col] = 'S';
+	
+	mazeGenerator(arr, row, col + 1);
+	int m = 0, n = 0;
+	
+	while(!m)
+	{
+		if(SIZE - 2 == n)
+		{
+			n--;
+			int t = 1 + rand() % (SIZE - 2); 
+			if(arr[t][SIZE - 3] == '.')
+			{
+				arr[t][SIZE - 1] = 'E';
+				arr[t][SIZE - 2] = '.';
+				m++;
+			}
+		}
+		else{
+	        int t = 1 + rand() % (SIZE - 2); 
+			if(arr[t][SIZE - 2] == '.')
+			{
+				arr[t][SIZE - 1] = 'E';
+				m++;
+			}
+		}
+			n++;
+	}
+
+	printArray(arr, SIZE);
 }
 
-void mazeGenerator(char a[][SIZE], int ret[])
+void mazeGenerator(char a[][SIZE], int posX, int posY)
 {
-   int row, col, i = 0;
-
-   /* Inizialize the maze */
-    for(row = 0; row < SIZE; row++)
-        for(col = 0; col < SIZE; col++)
-	        a[row][col] = '#';
- 
-    row = rand() % SIZE; 
-    col = 0;
+	int t = 0;
+	a[posX][posY] = '.';
 	
-	ret[0] = row;
-    ret[1] = col;
- }
- 
- 
- 
- 
+	int dirs[4];
+	dirs[0] = DOWN;
+	dirs[1] = RIGHT;
+	dirs[2] = UP;
+	dirs[3] = LEFT;
+	
+	for(int i = 0; i < 4; ++i)
+	{
+		int r = rand() % 3;
+		int temp = dirs[r];
+		dirs[r] = dirs[i];
+		dirs[i] = temp;
+	}
+	
+	for(int i = 0; i < 4; ++i)
+	{
+		int dx = 0, dy = 0;
+		
+		switch(dirs[i])
+		{
+			case DOWN:  dy = -1; break;
+			case RIGHT: dx =  1; break;
+			case UP:    dy =  1; break;
+			case LEFT:  dx = -1; break;
+		}
+		int x2 = posX + (dx<<1);
+		int y2 = posY + (dy<<1);
+		
+		if(isInBounds(x2, y2))
+		{
+			if(a[x2][y2] == '#')
+			{
+				a[x2 - dx][y2 - dy] = '.';
+				mazeGenerator(a, x2, y2);
+			}
+		}
+	}
+}
+	
 void printArray(char a[][SIZE], int size)
 {   
     int i, j;
@@ -55,99 +115,9 @@ void printArray(char a[][SIZE], int size)
 	}
 }
 
-void mazeTraversal(char a[][SIZE], int posX, int posY, int pos)
+int isInBounds(int posX, int posY)
 {
-	int edge(int x, int y);//проверка(край массива), тогда игра окончена
-	int validMove(char a[][SIZE], int x, int y);// проверка, можно ли в ячейку записывать данные(это не стена)
-	//стартовая позиция
-	int firstX = 2;
-	int firstY = 0;
-	int position = 0;
-	
-	if(a[posX][posY] == 'x')//если мы были уже в ячейке, то поставить заглавную букву, чтобы легче было отслеживать путь по лабиринту
-	{
-	a[posX][posY] = 'X';
-	}
-	else
-	{
-		a[posX][posY] = 'x';
-	}
-	
-	printArray(a, SIZE);//печать после каждого шага, чтобы отслеживать движение по лабиринту
-	
-	//выхода из лабиринта не существует, поэтому игрок вернулся в точку входа(стартовую позицию)
-	if(posX == firstX && posY == firstY && position == 1)
-	{
-		printf("\n%s\n", "***Starting position***");
-		return;
-	}
-	//игра окончена, так как игрок находится на краю лабиринта, но это не стартовая точка
-    else if((edge(posX, posY) && posX != firstX) && posY != firstY)
-	{
-		printf("\n%s\n", "***Done***");
-		return;
-	}
-	//иначе делаем следующий ход
-	else
-	{
-		int i, next;
-		position = 1;
-		
-		for(i = 0, next = pos; i < 4; ++i, ++next, next %= 4)//возможен ход в одном из четырех направлений
-		{
-			switch(next)
-			{
-				case RIGHT:
-				if(validMove(a, posX, posY + 1))
-				{
-					mazeTraversal( a, posX, posY + 1, DOWN);
-					
-	
-					return;
-				} 
-				break;
-				
-				case LEFT:
-				if(validMove(a, posX, posY - 1))
-				{
-					mazeTraversal( a, posX, posY - 1, UP);
-					return;
-				} 
-				break;
-				
-				case UP:
-				if(validMove(a, posX - 1, posY))
-				{
-					mazeTraversal( a, posX - 1, posY, RIGHT);
-					return;
-				} 
-				break;
-				
-				case DOWN:
-				if(validMove(a, posX + 1, posY))
-				{
-					mazeTraversal( a, posX + 1, posY, LEFT);
-					return;
-				} 
-				break;
-			}
-		}
-	}
-	
-}
-
-int edge(int x, int y)
-{
-	int ed;
-	if((x == 0 || x == 11) && (y >= 0 && y <= 11) || (x >= 0 && x <= 11) && (y == 0 || y == 11))
-		ed = 1;
-	else
-		ed = 0;
-	return ed;
-	
-}
-
-int validMove(char a[][SIZE], int x, int y)
-{
-	return(x >= 0 && x <= 11 && y >= 0 && y <= 11 && a[x][y] != '#');
+	if(posX <= 0 || posX >= SIZE - 1) return false;
+	if(posY <= 0 || posY >= SIZE - 1) return false;
+	return true;
 }
