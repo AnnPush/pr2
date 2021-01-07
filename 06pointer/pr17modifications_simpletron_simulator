@@ -3,15 +3,15 @@
 #include <string.h>
 #include <math.h>
 
-#define MEMSIZE 1000
+#define MEMSIZE 1000 //память Симплетрона
 #define MAXWORD 7
 
-/* Input/Output */
-#define READ   10
-#define WRITE  11
-#define NEWLINE 12
-#define SREAD 13
-#define SWRITE 14
+/* Операции ввода/вывода */
+#define READ   10 //вводит слово с терминала в указанное место памяти
+#define WRITE  11 //выводит на терминал слово из указанного адреса памяти
+#define NEWLINE 12 //вывод новой строки
+#define SREAD 13  //ввод строк
+#define SWRITE 14  //вывод строк
 
 /* Loading/Storing */
 #define LOAD  20
