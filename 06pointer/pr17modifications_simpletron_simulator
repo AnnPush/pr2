@@ -13,26 +13,26 @@
 #define SREAD 13  //ввод строк
 #define SWRITE 14  //вывод строк
 
-/* Loading/Storing */
-#define LOAD  20
-#define STORE 21
+/* Операции загрузки/Выгрузки */
+#define LOAD  20 //помещает в аккумулятор слово из указанного адреса памяти
+#define STORE 21 //выгружает слово из аккумулятора по указанному адресу памяти
 
-/* Arithmetical */
-#define ADD      30
-#define SUBTRACT 31
-#define DIVIDE   32
-#define MULTIPLY 33
-#define REST     34
-#define POWER    35
+/* Арифметические операции */
+#define ADD      30 //выполняет сложение слова в аккумуляторе и слова из указанного места в памяти (результат операции остается в аккумуляторе)
+#define SUBTRACT  31 //вычитает из слова в аккумуляторе слово из указанного места в памяти (результат операции остается в аккумуляторе)
+#define DIVIDE   32 //выполняет деление слова в аккумуляторе на слово из указанного места в памяти (результат операции остается в аккумуляторе)
+#define MULTIPLY 33 //вычисляет произведение слова в аккумуляторе и слова из указанного места в памяти (результат операции остается в аккумуляторе)
+#define REST     34 //значение по модулю
+#define POWER    35 //степень числа
 
-/* Reference and control */
-#define BRANCH     40
-#define BRANCHNEG  41
-#define BRANCHZERO 42
-#define HALT       43
+/* Операции передачи управления */
+#define BRANCH     40 //переход к указанному адресу памяти
+#define BRANCHNEG  41 //переход к указанному адресу памяти, если в аккумуляторе находится отрицательное число 
+#define BRANCHZERO 42 //переход к указанному адресу памяти, если в аккумуляторе находится ноль
+#define HALT       43 //останов, выполняется при завершении программой своей работы
 
-int checkword(int word, int size);
-void dump(float acc, int icounter, float mem[]);
+int checkword(int word, int size); //проверка слова
+void dump(float acc, int icounter, float mem[]); //вывод содержимого каждого регистра(дамп памяти)
 int r_htoi(const char string[]);
 char * p_itoh(int num, char str[], int z);
 
