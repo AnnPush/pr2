@@ -4,7 +4,7 @@
 #include <math.h>
 
 #define MEMSIZE 1000 //память Симплетрона
-#define MAXWORD 7
+#define MAXWORD 7 //максимальная длина слова
 
 /* Операции ввода/вывода */
 #define READ   10 //вводит слово с терминала в указанное место памяти
@@ -33,130 +33,147 @@
 
 int checkword(int word, int size); //проверка слова
 void dump(float acc, int icounter, float mem[]); //вывод содержимого каждого регистра(дамп памяти)
-int r_htoi(const char string[]);
-char * p_itoh(int num, char str[], int z);
+int r_htoi(const char string[]); //из шестнадцатеричного в десятичное
+char * p_itoh(int num, char str[], int z); //из десятичного в шестнадцатеричное
 
 int main(void)
 {
-   char s_mem[MAXWORD] = { 0 };
+   char s_mem[MAXWORD] = { 0 }; //массив символов
+   
+   //модель памяти в качестве одномерного массива из 1000 элементов и аккумулятор
    float memory[MEMSIZE] = { 0 }, accumulator = 0;
 
-   int operationCode = 0, instructionRegister = 0, operand = 0;
+   int operationCode = 0; //переменная для хранения кода текущей исполняемой команды, т. е. левых двух цифр слова команды
+   int instructionRegister = 0; //для хранения исполняемой команды
+   int operand = 0; //в переменной хранится адрес операнда текущей исполняемой команды(две правые цифры командного слова)
    int i, j, k, err = 0;
    float t_val = 0, f_tmp;
 
-   printf("*** Welcome to the Simpletron! ***\n"
-	  "*** Please enter your program one instruction ***\n"
-	  "*** (or data word) at a time. I will type the ***\n"
-	  "*** location number and a question mark (?).  ***\n"
-	  "*** You then type the word for that location. ***\n"
-	  "*** Use the sentinel -999999 to stop entering ***\n"
-	  "*** your program. ***\n");
 
-   for(i = 0; i < MEMSIZE; i++) {
-      while(1) {
-         printf("%.2d ?? ", i);
-         scanf("%s", s_mem);
+    printf("*** Симплетрон приветствует вас! ***\n"
+	  "*** Пожалуйста, введите вашу программу по одной команде ***\n"
+	  "*** (или слову данных) за раз. Я буду выводить в качестве ***\n"
+	  "*** подсказки текущий адрес и знак вопроса (?).  ***\n"
+	  "*** Введенное вами слово будет размещено по указанному адресу. ***\n"
+	  "*** Для прекращения ввода программы введите число -99999 ***\n");
 
-	 memory[i] = r_htoi(s_mem);
+    for(i = 0; i < MEMSIZE; i++) 
+    {
+                while(1) 
+	        {
+		//ввести команды программы
+                printf("%.2d ?? ", i);
+                scanf("%s", s_mem);
 
-	 if(memory[i] == -999999) {
-	    memory[i] = 0;
-	    i = MEMSIZE; /* Terminate the for loop */
-	    break;
-	 }
+	        memory[i] = r_htoi(s_mem);
 
-	 if(s_mem[0] != '+') {
-	    printf("*** Invalid instruction: %s\n", s_mem);
-	    printf("*** Please use '+' or exit.\n");
-	    continue;
-	 }
+	        if(memory[i] == -999999) 
+			{
+	            memory[i] = 0;
+	            i = MEMSIZE; //для завершения цикла
+	            break;
+	        }
 
-	 if( checkword((int)memory[i], MEMSIZE) ) {
-	    printf("*** Invalid instruction: +%.0f\n"
-		   "*** Please retype it or exit.\n", memory[i]);
-	 }
-	 else
-	    break;
+	        if(s_mem[0] != '+')
+			{
+	            printf("*** Ошибка: %s\n", s_mem);
+	            printf("*** Используйте '+' или выйти.\n");
+	            continue;
+	        }
 
-      } /* end while */
-   } /* end for (i) */
+	        if( checkword((int)memory[i], MEMSIZE) ) 
+			{
+	            printf("*** Ошибка: +%.0f\n"
+		        "*** Повторите введение команды или выход.\n", memory[i]);
+	        }
+	        else
+	            break;
 
-   printf("*** Program loading completed ***\n"
-	  "*** Program execution begins  ***\n");
+        } /* end while */
+    } /* end for (i) */
 
-   for(i = 0; i < MEMSIZE; i++) {
-      instructionRegister = (int)memory[i];
+    printf("*** Загрузка программы завершена ***\n"
+	       "*** Начинаю выполнение программы ***\n");
+	
+    for(i = 0; i < MEMSIZE; i++) 
+	{
+        instructionRegister = (int)memory[i];
 
-      operationCode = 
-	 instructionRegister / (instructionRegister <= 9999 ? 100 : 1000);
-      operand =
-	 instructionRegister % (instructionRegister <= 9999 ? 100 : 1000);
+        operationCode = instructionRegister / (instructionRegister <= 9999 ? 100 : 1000);
+        operand = instructionRegister % (instructionRegister <= 9999 ? 100 : 1000);
 
-      /* this is required because after the switch()
-      statement the 'i' counter is incremented of 1. */
-      if(operationCode >= BRANCH)
-         --operand;
+        /* this is required because after the switch()
+        statement the 'i' counter is incremented of 1. */
+        if(operationCode >= BRANCH)
+            --operand;
 
-      switch(operationCode) {
-	 case READ:
-	    printf("\nInsert a word: ");
-            scanf("%f", &memory[operand]);
+        switch(operationCode)
+		{
+	        case READ:
+	            printf("\nInsert a word: ");
+                scanf("%f", &memory[operand]);
+	        break;
+			
+	        case WRITE:
+	            printf("\nMemory location: %.2d\nWord: %.2f\n",
+	            operand, memory[operand]);
+	        break;
+			
+	        case NEWLINE:
+	            printf("\n");
+	        break;
+			
+	        case SREAD:
+	            /* If this instruction is used then HALT is required */
+	            printf("\nInsert a string: ");
+	            scanf("%s", s_mem);
 
-	    break;
-	 case WRITE:
-	    printf("\nMemory location: %.2d\nWord: %.2f\n",
-	       operand, memory[operand]);
+	            if(strlen(s_mem) > 3) 
+				{
+	                err = 3;
+	                break;
+				}
+				
+	            for(j = 0; (unsigned)j < strlen(s_mem); j++)
+                {
+	                if((int)s_mem[j] > 99)
+					{
+		                err = 4;
+		                t_val = j;
+		                break;
+	                }
+	            }
+	            memory[operand] = 0;
 
-	    break;
-	 case NEWLINE:
-	    printf("\n");
-	    break;
-	 case SREAD:
-	    /* If this instruction is used then HALT is required */
-	    printf("\nInsert a string: ");
-	    scanf("%s", s_mem);
+	            for(j = strlen(s_mem), k = 1; j >= 0; k *= 100, j--)
+                    memory[operand] += s_mem[j] * k;
 
-	    if(strlen(s_mem) > 3) {
-	       err = 3;
-	       break;
-	    }
+                for(t_val = 0.1, k = 1; k < memory[operand]; t_val *= 0.10, k *= 10) ;
+	                t_val /= 0.10;
 
-	    for(j = 0; (unsigned)j < strlen(s_mem); j++) {
-	       if((int)s_mem[j] > 99) {
-		  err = 4;
-		  t_val = j;
-		  break;
-	       }
-	    }
-	    memory[operand] = 0;
+	            memory[operand] *= t_val;
+	            memory[operand] += strlen(s_mem);
 
-	    for(j = strlen(s_mem), k = 1; j >= 0; k *= 100, j--)
-	       memory[operand] += s_mem[j] * k;
-
-            for(t_val = 0.1, k = 1; k < memory[operand]; t_val *= 0.10, k *= 10) ;
-	    t_val /= 0.10;
-
-	    memory[operand] *= t_val;
-	    memory[operand] += strlen(s_mem);
-
-	    break;
-	 case SWRITE:
-	    printf("\nMemory location: %.0f\nWord: ", memory[operand]);
-	    for(j = (int)memory[operand], t_val = 100; j ; t_val *= 100, j--) { 
-	       f_tmp = memory[operand] * t_val;
-	       k = (int)f_tmp % 100;
-	       printf("%c", k);
-	    }
-	    printf("\n");
-
-	    break;
-	 case LOAD:
-	    accumulator = memory[operand];
-	    break;
-	 case STORE:
-	    memory[operand] = accumulator;
-	    break;
+	        break;
+			
+	        case SWRITE:
+	            printf("\nMemory location: %.0f\nWord: ", memory[operand]);
+	            for(j = (int)memory[operand], t_val = 100; j ; t_val *= 100, j--) 
+				{ 
+	               f_tmp = memory[operand] * t_val;
+	               k = (int)f_tmp % 100;
+	               printf("%c", k);
+	            }
+	            printf("\n");
+	        break;
+			
+	        case LOAD:
+	            accumulator = memory[operand];
+	        break;
+			
+	        case STORE:
+	            memory[operand] = accumulator;
+	        break;
 
 	 case ADD:
 	    accumulator += memory[operand];
@@ -450,4 +467,3 @@ char * p_itoh(int num, char str[], int z)
 
    return str;
 }
-
