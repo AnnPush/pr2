@@ -59,11 +59,11 @@ int main(void)
 
     for(i = 0; i < MEMSIZE; i++) 
     {
-                while(1) 
-	        {
-		//ввести команды программы
-                printf("%.2d ?? ", i);
-                scanf("%s", s_mem);
+        while(1) 
+	    {
+		    //ввести команды программы
+            printf("%.2d ?? ", i);
+            scanf("%s", s_mem);
 
 	        memory[i] = r_htoi(s_mem);
 
@@ -102,20 +102,20 @@ int main(void)
         operationCode = instructionRegister / (instructionRegister <= 9999 ? 100 : 1000);
         operand = instructionRegister % (instructionRegister <= 9999 ? 100 : 1000);
 
-        /* this is required because after the switch()
-        statement the 'i' counter is incremented of 1. */
+        /* это необходимо, потому что после switch()
+         'i' счетчик увеличивается на 1. */
         if(operationCode >= BRANCH)
             --operand;
 
         switch(operationCode)
 		{
 	        case READ:
-	            printf("\nInsert a word: ");
+	            printf("\nВвести слово: ");
                 scanf("%f", &memory[operand]);
 	        break;
 			
 	        case WRITE:
-	            printf("\nMemory location: %.2d\nWord: %.2f\n",
+	            printf("\nРазмещение в памяти: %.2d\nWord: %.2f\n",
 	            operand, memory[operand]);
 	        break;
 			
@@ -175,46 +175,45 @@ int main(void)
 	            memory[operand] = accumulator;
 	        break;
 
-	 case ADD:
-	    accumulator += memory[operand];
+	        case ADD:
+	            accumulator += memory[operand];
+	        break;
+			
+	        case SUBTRACT:
+	            accumulator -= memory[operand];
+            break;
+			
+	        case DIVIDE:
+	            if( !memory[operand] )
+	                err = 2;
+	            else
+	                accumulator /= memory[operand];
+	        break;
+			
+	        case MULTIPLY:
+	            accumulator *= memory[operand];
+	        break;
+			
+	        case REST:
+	            accumulator = (int)accumulator % (int)memory[operand];
+	        break;
 
-	    break;
-	 case SUBTRACT:
-	    accumulator -= memory[operand];
+	        case POWER:
+	            accumulator = pow(accumulator, memory[operand]);
+	        break;
 
-	    break;
-	 case DIVIDE:
-	    if( !memory[operand] )
-	       err = 2;
-	    else
-	       accumulator /= memory[operand];
-
-	    break;
-	 case MULTIPLY:
-	    accumulator *= memory[operand];
-
-	    break;
-	 case REST:
-	    accumulator = (int)accumulator % (int)memory[operand];
-
-	    break;
-
-	 case POWER:
-	    accumulator = pow(accumulator, memory[operand]);
-	    break;
-
-	 case BRANCH:
-	    i = operand;
-	    break;
-	 case BRANCHNEG:
-	    if(accumulator < 0)
-	       i = operand;
-
-	    break;
-	 case BRANCHZERO:
-	    if(!accumulator)
-	       i = operand;
-
+	        case BRANCH:
+	            i = operand;
+	        break;
+			
+	        case BRANCHNEG:
+	            if(accumulator < 0)
+	                i = operand;
+	        break;
+			
+	        case BRANCHZERO:
+	            if(!accumulator)
+	                i = operand;
             break;
 
 	 case HALT:
@@ -268,7 +267,7 @@ int main(void)
    return 0;
 } /* E0F main */
 
-/* Check if a "word" is correct */
+/* проверка слова на корректность */
 int checkword(int word, int size)
 {
    if( word < 0 || word >= MEMSIZE * MEMSIZE ||
