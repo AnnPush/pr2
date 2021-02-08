@@ -26,7 +26,6 @@ void strrev(char *str, char *currentLexem)
 	if(currentLexem != NULL )
 	{
 		strrev(str, currentLexem);
-		if(currentLexem != "\n")
 		printf("%s ", currentLexem);
 	}	
 }
