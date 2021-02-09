@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define LIMS 5 //количество куплетов в стихотворении
-#define WORDS 5 //количество слов(артиклей, глаголов.../* Words for string (article, noun, etc.) */
+#define WORDS 5 //количество слов(артиклей, глаголов...
 #define SIZE 35 //длина одной строки стихотворения
 
 int main(void)
