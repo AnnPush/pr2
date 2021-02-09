@@ -4,100 +4,104 @@
 #include <ctype.h>
 #include <time.h>
 
-#define LIMS 5
-#define WORDS 5 /* Words for string (article, noun, etc.) */
-#define SIZE 30
+#define LIMS 5 //количество куплетов в стихотворении
+#define WORDS 5 //количество слов(артиклей, глаголов.../* Words for string (article, noun, etc.) */
+#define SIZE 35 //длина одной строки стихотворения
 
 int main(void)
 {
-   int i, j, k, x, l, rloop, rhymes[5] = { 0 };
-   char tmp_s[SIZE], phrase[SIZE];
-   const char * tokp;
+    int rloop;//случайное число
+    int	rhymes[5] = { 0 };
+    char tmp_s[SIZE];//временный массив
+	char phrase[SIZE];//массив для предложения
+    const char * tokp;//указатель на строку
 
-   const char * const article = "the a one some any";
-   const char * const noun = "boy girl do town car";
-   const char * const verb = "drove jumped ran walked skipped";
-   const char * const preposition = "to from over under on";
+    const char * const article = "the a one some any";//строка артиклей
+    const char * const noun = "boy girl dog town car";//строка существительных
+    const char * const verb = "drove jumped ran walked skipped";//строка глаголов
+    const char * const preposition = "to from over under on";//строка предлогов
 
-   /* Store the memory address for each string */
-   const char * const string[6] = { 
-      article, noun, verb,
-      preposition, article, noun
-   };
+    const char * const string[6] = { article, noun, verb, preposition, article, noun};//массив указателей на строки
 
-   srand( time(NULL) );
+    srand( time(NULL) );
 
-   for(l = 0; l < LIMS; l++) { 
+    for(int l = 0; l < LIMS; l++)//5 куплетов 
+    { 
+        for(int i = 0; i < 5; i++) //пять фраз
+	    {
+            for(int j = 0; j < 6; j++) //6 слов в каждой фразе
+		    {
+                //создать фразу
+	            rloop = 1 + rand() % WORDS;//случайное слово в масииве глаголов, существительных...
+                strcpy(tmp_s, string[j]);//скопировать указанную строку во временный массив
+	            tokp = strtok(tmp_s, " ");//установить указатель на элемент временного массива
+				
+                for(int k = 0; k < rloop && tokp != NULL; k++) 
+				{
+	                if(!k) 
+					{
+	                    strcpy(tmp_s, string[j]);//скопировать указанную строку во временный массив
+	                    tokp = strtok(tmp_s, " ");//установить указатель на элемент временного массива
+	                }
+	                else tokp = strtok(NULL, " ");//пошагово двигаемся к нужному слову строки
 
-      /* loop the phrases */
-      for(i = 0; i < 5; i++) {
+	                if(i && j == 5) 
+					{
+		                //проверить рифму
+	                    for(int x = 0; x < 5; x++) 
+						{
+	                        if(!x) 
+							{
+                                strcpy(tmp_s, string[j]);//скопировать указанную строку во временный массив
+		                        tokp = strtok(tmp_s, " ");//установить указатель на элемент временного массива
+ 	  	                    }
+	   	                    else tokp = strtok(NULL, " ");//пошагово двигаемся к нужному слову строки
 
-         /* loop the *string[] */ 
-         for(j = 0; j < 6; j++) {
+		                    //установить рифму
+		                    if(i == 1) 
+							{
+		                        if(tokp[strlen(tokp) - 1] == rhymes[0])//вторая строка рифмуется с первой
+							    {
+		                            break;
+		                        }
+		                    }
+		                    else if(i == 2) 
+							{
+			                    if(tokp[strlen(tokp) - 1] != rhymes[0])//третья строка не рефмуется с первой
+			                        break;
+		                    }
+		                    else if(i == 3)
+						    {
+		                        if(tokp[strlen(tokp) - 1] == rhymes[2])//четвертая строка рифмуется с третьей
+  		                            break;
+		                    }
+		                    else if(i == 4)
+							{
+		                        if(tokp[strlen(tokp) - 1] == rhymes[0])//пятая строка рифмуется с первой
+			                        break;
+		                    }
 
-            /* Create the phrase */
-	    rloop = 1 + rand() % WORDS;
- 
-            for(k = 0; k < rloop && tokp != NULL; k++) {
-	       if(!k) {
-	          strcpy(tmp_s, string[j]);
-	          tokp = strtok(tmp_s, " ");
-	       }
-	       else tokp = strtok(NULL, " ");
+	                    }
+	                }
+	            }
 
-	       if(i && j == 5) {
-		  /* Check the rhymes */
-	          for(x = 0; x < 5; x++) {
-	             if(!x) {
-                        strcpy(tmp_s, string[j]);
-		        tokp = strtok(tmp_s, " ");
- 	  	     }
-	   	     else tokp = strtok(NULL, " ");
+                //добавить маркер в фразу
+                if(!j)
+	                strcpy(phrase, tokp);
+	            else 
+				{
+	                strcat(phrase, tokp);
+	            }
+	            strcat(phrase, " ");
+            }
+            rhymes[i] = phrase[strlen(phrase) - 2];
+            strcat(phrase, "\0"); //добавить ноль в конце строки
 
-		     /* set the rhymes */
-		     if(i == 1) {
-		        if(tokp[strlen(tokp) - 1] == rhymes[0]) {
-		           break;
-		        }
-		     }
-		     else if(i == 2) {
-			if(tokp[strlen(tokp) - 1] != rhymes[0])
-			   break;
-		     }
-		     else if(i == 3) {
-		       if(tokp[strlen(tokp) - 1] == rhymes[2])
-  		           break;
-		     }
-		     else if(i == 4) {
-		        if(tokp[strlen(tokp) - 1] == rhymes[0])
-			   break;
-		     }
+            phrase[0] = toupper((int)phrase[0]);//первое слово с большой буквы
+            phrase[strlen(phrase) - 1] = '.';//в конце предложения поставить точку
 
-	          }
-	       }
-	    }
-
-            /* Append the token in the phrase */
-            if(!j)
-	       strcpy(phrase, tokp);
-	    else {
-	       strcat(phrase, tokp);
-	    }
-	    strcat(phrase, " ");
-         }
-         rhymes[i] = phrase[strlen(phrase) - 2];
-         strcat(phrase, "\0"); /* "Close" the string */
-
-         /* Add some graphic stuff :-) */
-         phrase[0] = toupper((int)phrase[0]);
-         phrase[strlen(phrase) - 1] = '.';
-
-         printf("%2d: %s\n", i + 1, phrase);
-
-      }
-
-      printf("\n");
-   } /* end for (l) */
-
-   return 0;
-} /* E0F main */
+            printf("%2d: %s\n", i + 1, phrase);//вывести строку стихотворения на печать
+        }
+        puts("");
+    } 
+}
