@@ -29,9 +29,9 @@ int main(void)
 	if(s != NULL)
 		*s = '\0';
 	
-	for(i = 0; i < STR; i++) 
+	for(int j = 0; j < SIZE; j++) 
 	{
-        searchPtr = strstr(arrstr[i], searchstr);
+        searchPtr = strstr(arrstr[j], searchstr);
         while( searchPtr != NULL )
 		{
 	        searchPtr = strstr(searchPtr + 1, searchstr);
@@ -44,6 +44,8 @@ int main(void)
    else
       printf("Found %d matches!\n", counter);
 }
+
+
 
 
 
