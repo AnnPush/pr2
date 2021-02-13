@@ -2,40 +2,36 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define STRINGS 10
-#define BUF 254
+#define SIZE 127
 
 int main(void)
 {
-   char string[STRINGS][BUF] = { { 0 } }, *tokp;
-   int i = 0, counter = 0;
+	char arrstr[SIZE][SIZE];
+	char * searchPtr;
+	int i = 0;
+	int counter = 0;
+	
+	printf("Enter string (%d to end): ", EOF);
+    fgets(arrstr[i], SIZE, stdin);
 
-   /* Take the strings */
-   printf("Give me a string (%d to end): ", EOF);
-   gets(string[i]);
-
-   while( atoi(string[i++]) != -1 ) {
-      printf("Give me a string (%d to end): ", EOF);
-      gets(string[i]);
+    while (strtol(arrstr[i++], &searchPtr, 0) != -1 )
+    {
+        printf("Enter string (%d to end): ", EOF);
+        fgets(arrstr[i], SIZE, stdin);
+	}
+	arrstr[i - 1][0] = '\0';
+	
+	for(i = 0; (unsigned)i < strlen(arrstr[i]); i++) {
+		searchPtr = strtok(arrstr[i], " \n");
+		while(searchPtr != NULL)
+		{
+			++counter;
+			searchPtr = strtok(NULL, " \n");
+		}
    }
-
-   string[i - 1][0] = '\0'; /* Remove the '-1' */
-
-   for(i = 0; i < STRINGS; i++) {
-      tokp = strtok(string[i], " ");
-
-      while( tokp != NULL ) {
-         ++counter;
-         tokp = strtok(NULL, " ");
-      }
-
-   }
-
+ 
    if(!counter)
       printf("There are no words!\n");
    else
-      printf("There are %d words!\n", counter);
-
-   return 0;
-} /* E0F main */
-
+      printf("There are %d words!\n", counter); 
+}
