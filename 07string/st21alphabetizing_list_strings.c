@@ -3,59 +3,56 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define SIZE 20
-#define BUF 254
+#define SIZE 127
 
-void bsortp(char *string[]);
+void sortarray(char *string[]);
 
 int main(void)
 {
-   char cities[SIZE][BUF], *pointers[SIZE] = { 0 };
-   int i = 0, j;
+	char arrstr[SIZE][SIZE]={{0}};
+	char *searchPtr;
+	char *ptr[SIZE]={0};
+	int i = 0, j = 0;
+	
+	printf("Enter string (%d to end): ", EOF);
+    fgets(arrstr[i], SIZE, stdin);
 
-   printf("Give me a city (%d to end): ", EOF);
-   gets(cities[i]);
+    while (strtol(arrstr[i++], &searchPtr, 0) != -1 )
+    {
+        printf("Enter string (%d to end): ", EOF);
+        fgets(arrstr[i], SIZE, stdin);
+	}
+	
+	arrstr[i - 1][0] = '\0';
+	
+	for(i = 0; i < SIZE; i++)
+       ptr[i] = arrstr[i];
+   
+	sortarray(ptr);
+	
+	for(i = 0; i < SIZE; i++)
+	{
+        if( strlen(ptr[i]) )
+           printf("%s\n", ptr[i]);
+    }	
+}
 
-   while( atoi(cities[i++]) != EOF ) {
-      /* convert the string to lowercase */
-      for(j = 0; j < (int)strlen(cities[i - 1]); j++)
-	 cities[i - 1][j] = tolower((int)cities[i - 1][j]);
 
-      printf("Give me a city (%d to end): ", EOF);
-      gets(cities[i]);
-   }
-
-   cities[i - 1][0] = '\0'; /* Remove the '-1' */
-
-   /* Copy the address of each phrase to pointers[] */
-   for(i = 0; i < SIZE; i++)
-      pointers[i] = cities[i];
-
-   bsortp(pointers); /* Order the pointers[] array */
-
-   /* Print the non-empty strings in the pointer[] */
-   for(i = 0; i < SIZE; i++) {
-      if( strlen(pointers[i]) )
-         printf("%s\n", pointers[i]);
-   }
-
-   return 0;
-} /* E0F main */
-
-/* Sort an array of pointers using the BubbleSort alrorithm */
-void bsortp(char *string[])
+void sortarray(char *string[])
 {
-   int i, j;
-   char *tmpp;
+    int i, j;
+    char *tmp;
 
-   for(i = 1; i < SIZE; i++) {
-      for(j = 0; j < SIZE - 2; j++) {
-         if( strcmp(string[j], string[j + 1]) > 0 ) {
-            /* Swap the addresses */
-	    tmpp = string[j];
-	    string[j] = string[j + 1];
-	    string[j + 1] = tmpp;
-	 }
-      }
-   }
-} /* eof bsortp() */
+    for(i = 1; i < SIZE; i++)
+	{
+        for(j = 0; j < SIZE - 2; j++)
+		{
+            if( strcmp(string[j], string[j + 1]) > 0 )
+			{   
+	            tmp = string[j];
+	            string[j] = string[j + 1];
+	            string[j + 1] = tmp;
+	        }
+        }
+    }
+} 
