@@ -33,7 +33,7 @@ int main(void)
 	for(i = 0; i < SIZE; i++)
 	{
         if( strlen(ptr[i]) )
-           printf("%s\n", ptr[i]);
+           printf("%s", ptr[i]);
     }	
 }
 
