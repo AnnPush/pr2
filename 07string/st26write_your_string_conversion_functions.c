@@ -30,7 +30,6 @@ int main(void)
 
 
 
-/* Convert ASCII string to double */
 double strtod(const char *nptr, char **endptr)
 {
    double ret, d = 1;
