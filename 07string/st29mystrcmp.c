@@ -27,6 +27,37 @@ int mystrcmp(const char *s1, const char *s2)
         return *s1 - *s2;
     }
 }
+/strcmp_array
+
+#include <stdio.h>
+
+int mystrcmp(const char *s1, const char *s2);
+
+int main(void)
+{
+  
+    printf("mystrcmp(\"abc\", \"abe\") = %d\n", mystrcmp("abc", "abe") );
+    
+}
+
+int mystrcmp(const char *s1, const char *s2)
+{
+	int i = 0;
+
+   while(( s1[i] != '\0' && s2[i] != '\0' ) && s1[i] == s2 [i])
+	   i++;
+    
+
+    if(s1[i] == s2[i])
+    {
+        return 0; 
+    }
+    else
+    {
+        return s1[i] - s2[i];
+    }
+}
+
 
 //strncmp
 #include <stdio.h>
