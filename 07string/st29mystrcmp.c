@@ -88,3 +88,35 @@ for(int i = 0; i < n && ( ( *s1 != '\0' && *s2 != '\0' ) && *s1 == *s2 ); ++i)
         return *s1 - *s2;
     }
 }
+
+//strncmp_array
+
+#include <stdio.h>
+
+int mystrncmp(const char *s1, const char *s2, size_t n);
+
+int main(void)
+{
+  
+    printf("mystrncmp(\"abbbbc\", \"abbbbe\") = %d\n", mystrncmp("abbbbc", "abbbbe", 4) );
+    
+}
+
+int mystrncmp(const char *s1, const char *s2, size_t n)
+{
+	
+	int i = 0;
+
+   while(i < n &&( s1[i] != '\0' && s2[i] != '\0' ) && s1[i] == s2 [i])
+	   i++;
+
+
+     if(s1[i] == s2[i])
+    {
+        return 0; 
+    }
+    else
+    {
+        return s1[i] - s2[i];
+    }
+}
