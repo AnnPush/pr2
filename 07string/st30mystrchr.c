@@ -7,8 +7,7 @@ int main(void)
    char string[] = "dfgb nhyb bhmn njhb bh";
    char search = 'n';
    char *p;
-   int size;
- 
+  
    p = mystrchr(string, search);
    printf("mystrchr(string, search): %s\n", p);
  }
