@@ -5,7 +5,7 @@ void *mymemcpy(void *s1, const void *s2, size_t n);
 int main(void)
 {
    char strs2[] = "fghj bn bgth njm h njm";
-   char strs1[40]={0};
+   char strs1[40];
   
    mymemcpy(strs1, strs2, 6);
    printf("memcpy(): %s\n", strs1);
