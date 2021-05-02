@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 
 char *s_gets(char *st, int n);
@@ -10,7 +11,7 @@ struct book{
 	char title[MAXTITL];
 	char author[MAXAUTL];
 	float value;
-};                       //конец шаблона стуктуры
+};                       //конец шаблона структуры
 
 int main(void)
 {
@@ -25,5 +26,23 @@ int main(void)
 	puts("Enter price book:");
 	scanf("%f", &library.value);
 	
-	
+	printf("%s author %s: $%.2f\n", library.title, library.author, library.value);
+	printf("%s: \"%s\" ($%.2f)\n", library.author, library.title, library.value);
+}
+
+char *s_gets(char *st, int n)
+{
+	char *ret_val;
+	char *find;
+	ret_val = fgets(st, n, stdin);
+	if(ret_val)
+	{
+		find=strchr(st, '\n');//поиск новой строки
+		if(find)//если адрес не равен NULL
+		*find = '\0';//поместить туда нулевой символ
+	else
+	while(getchar()!='\n')
+	continue;//отбросить остаток строки
+	}
+	return ret_val;
 }
