@@ -15,9 +15,14 @@ void init()
 		mas[0][i] = '#';
 	
 	mas[0][width] = '\0';
-	
-	for(i = 1; i < height; i++)
-		strncpy(mas[i], mas[0], width + 1);
+
+	strncpy(mas[1], mas[0], width + 1);
+
+	for(i = 1; i < width - 1; i++)
+	mas[1][i] = ' ';
+
+	for(i = 2; i < height; i++)
+		strncpy(mas[i], mas[1], width + 1);
 }
 
 void show()
