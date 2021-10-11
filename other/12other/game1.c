@@ -12,6 +12,9 @@ int main(void)
 	int cx, cy;
 
 	int ax = 5, ay = 3;
+
+	int apples = 0;
+
 	srand(time(NULL));
 
 	do
@@ -32,7 +35,7 @@ int main(void)
 	{
 		printf("%s\n", mas[i]);
 	}
-
+	printf("\n apples: %d", apples );
 	key = getch();
 	cx = x;
 	cy = y;
@@ -52,6 +55,7 @@ int main(void)
 	{
 		ax = rand() * 1.0 / RAND_MAX * 18 + 1;
 		ay = rand() * 1.0 / RAND_MAX * 8 + 1;
+		apples++;
 	}
 	}
 	while(key != 'e');
